@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "572278114585",
+    "project_id": "chat-app-3e15d",
+    "storage_bucket": "chat-app-3e15d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572278114585:android:4dd67d915d546f17449d88",
+        "android_client_info": {
+          "package_name": "com.mridul.chatting_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbU5sFsSjxCo1blwI9PA8VE0UeDFkF-RI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
