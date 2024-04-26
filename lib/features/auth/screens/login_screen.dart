@@ -18,7 +18,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   Country? country;
 
-
   @override
   void dispose() {
     _phoneNumberController.dispose();
@@ -26,79 +25,88 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void pickCountry() {
-    showCountryPicker(context: context,
-    showPhoneCode: true,
-    onSelect: (Country _country) {
-      setState(() {
-        country = _country;
-      });
-    });
+    showCountryPicker(
+        context: context,
+        showPhoneCode: true,
+        onSelect: (Country _country) {
+          setState(() {
+            country = _country;
+          });
+        });
   }
 
   void sendPhoneNumber() {
     String phoneNumber = _phoneNumberController.text.trim();
-    if(country != null && phoneNumber.isNotEmpty){
-      ref.read(authControllerProvider).signInWithPhone(context, '+${country!.phoneCode}$phoneNumber');
-    }
-    else{
+    if (country != null && phoneNumber.isNotEmpty) {
+      ref
+          .read(authControllerProvider)
+          .signInWithPhone(context, '+${country!.phoneCode}$phoneNumber');
+    } else {
       showSnackBar(context: context, content: 'Fill out all fields');
     }
-    print('${country!.phoneCode}$phoneNumber');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Enter your phone number'),
-          backgroundColor: backgroundColor,
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+      appBar: AppBar(
+        title: const Text('Enter your phone number'),
+        backgroundColor: backgroundColor,
+        elevation: 0,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text('JMD will need to verify your phone number'),
+            SizedBox(
+              height: MediaQuery.of(context).size.width * 0.05,
+            ),
+            TextButton(
+              onPressed: pickCountry,
+              child: const Text('Pick Country'),
+            ),
+            Row(
               children: [
-                const Text('JMD will need to verify your phone number'),
+                if (country != null)
+                  Text(
+                    '+${country!.phoneCode}',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                const SizedBox(
+                  width: 15,
+                ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.05,
-                ),
-                TextButton(
-                  onPressed: pickCountry,
-                  child: const Text('Pick Country'),
-                ),
-                Row(
-                  children: [
-                    if(country != null)
-                     Text(
-                      '+${country!.phoneCode}',
-                      style: const TextStyle(fontSize: 20),
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: TextField(
+                    controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      hintText: 'phone number',
                     ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: TextField(
-                        controller: _phoneNumberController,
-                        keyboardType: TextInputType.phone,
-                        decoration:
-                            const InputDecoration(hintText: 'phone number',),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.62,
-                ),
-                SizedBox(
-                  width: 90,
-                  child: CustomButton(text: 'Next', onPressed: sendPhoneNumber),
+                  ),
                 )
               ],
             ),
-          ),
-        ));
+            Expanded(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
+                child: const SizedBox(
+                  height: 50,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 90,
+              child: CustomButton(text: 'Next', onPressed: sendPhoneNumber),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

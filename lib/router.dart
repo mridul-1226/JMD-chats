@@ -1,6 +1,7 @@
 import 'package:chatting_app/common/widgets/error_screen.dart';
 import 'package:chatting_app/features/auth/screens/login_screen.dart';
 import 'package:chatting_app/features/auth/screens/otp_screen.dart';
+import 'package:chatting_app/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:chatting_app/screens/user_information_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: ((context) => OtpScreen(verificationId: verificationId)),);
     case UserInformationScreen.routeName:
       return MaterialPageRoute(builder: ((context) => const UserInformationScreen()));
+    case SelectContactsScreen.routeName:
+      return MaterialPageRoute(builder: ((context) => const SelectContactsScreen()));
     default:
       return MaterialPageRoute(
           builder: (context) =>

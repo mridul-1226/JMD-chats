@@ -1,4 +1,4 @@
-const info = [
+const List<Map<String, String>> info = [
   {
     'name': 'Rivaan Ranawat',
     'message': 'Hey, how are you doing?',

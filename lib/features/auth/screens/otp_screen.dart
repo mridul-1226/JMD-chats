@@ -1,7 +1,6 @@
 import 'package:chatting_app/data/colors.dart';
 import 'package:chatting_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OtpScreen extends ConsumerWidget {
@@ -10,7 +9,7 @@ class OtpScreen extends ConsumerWidget {
   const OtpScreen({super.key, required this.verificationId});
 
   void verifyOtp(BuildContext context, String userOTP, WidgetRef ref){
-    ref.read(authControllerProvider).verifyOtp(context: context, verificationId: verificationId, userOTP: userOTP);
+    ref.read(authControllerProvider).verifyOtp(context, verificationId, userOTP);
   }
 
   @override
@@ -37,8 +36,9 @@ class OtpScreen extends ConsumerWidget {
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     hintText: '- - - - - -',
-                    hintStyle: TextStyle(fontSize: 30)
+                    hintStyle: TextStyle(fontSize: 30),
                   ),
+                  maxLength: 6,
                   onChanged: (value) {
                     if(value.length == 6){
                       verifyOtp(context, value.trim(), ref);

@@ -41,6 +41,8 @@ dependencies:
   firebase_storage: ^11.7.3
   country_picker: ^2.0.25
   flutter_riverpod: ^2.5.1
+  image_picker: ^1.1.0
+  flutter_contacts: ^1.1.7+1
 
 dev_dependencies:
   flutter_test:

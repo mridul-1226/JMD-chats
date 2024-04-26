@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:chatting_app/features/auth/repository/auth_repository.dart';
+import 'package:chatting_app/models/user_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,19 +12,48 @@ final authControllerProvider = Provider((ref) {
     authRepository: ref.watch(
       authRepositoryProvider,
     ),
+    ref: ref
   );
+});
+
+final userDataAuthProvider = FutureProvider((ref) {
+  final authController = ref.watch(authControllerProvider);
+  return authController.getCurrentUserData();
 });
 
 class AuthController {
   final AuthRepository authRepository;
+  final ProviderRef ref;
 
-  AuthController({required this.authRepository});
+  AuthController({required this.authRepository, required this.ref});
 
-  void signInWithPhone(BuildContext context, String phoneNumber) {
-    authRepository.signInWithPhone(context, phoneNumber);
+  Future<UserModel?> getCurrentUserData() async{
+    UserModel? user = await authRepository.getCurrentUserData();
+    return user;
   }
 
-  void verifyOtp({required BuildContext context, required String verificationId, required String userOTP}) {
-    authRepository.verifyOtp(context: context, verificationId: verificationId, userOTP: userOTP);
+  void signInWithPhone(BuildContext context, String phoneNumber) {
+    authRepository.signInWithPhone(
+      context,
+      phoneNumber,
+    );
+  }
+
+  void verifyOtp(BuildContext context, String verificationId, String userOTP) {
+    authRepository.verifyOtp(
+      context: context,
+      verificationId: verificationId,
+      userOTP: userOTP,
+    );
+  }
+
+  void saveUserDataToFirebase(
+      BuildContext context, String name, File? profilePic) {
+    authRepository.saveUserDataToFirebase(
+      context: context,
+      name: name,
+      profilePic: profilePic,
+      ref: ref,
+    );
   }
 }
