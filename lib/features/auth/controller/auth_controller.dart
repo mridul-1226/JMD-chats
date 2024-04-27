@@ -56,4 +56,8 @@ class AuthController {
       ref: ref,
     );
   }
+
+  Stream<UserModel> userDataById(String uid){
+    return authRepository.userData(uid);
+  }
 }

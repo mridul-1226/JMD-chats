@@ -1,6 +1,6 @@
 import 'package:chatting_app/data/colors.dart';
 import 'package:chatting_app/data/info.dart';
-import 'package:chatting_app/screens/chat_screen.dart';
+import 'package:chatting_app/features/chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 class ContactList extends StatelessWidget {
   const ContactList({super.key});
@@ -19,7 +19,7 @@ class ContactList extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ChatScreen(),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ChatScreen(name: 'ABC', uid: '1234',),));
                   },
                   child: ListTile(
                     leading: CircleAvatar(

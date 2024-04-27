@@ -1,4 +1,4 @@
-import 'package:chatting_app/widgets/chat_list.dart';
+import 'package:chatting_app/features/chat/widgets/chat_list.dart';
 import 'package:chatting_app/widgets/contact_list.dart';
 import 'package:chatting_app/widgets/web_input_message.dart';
 import 'package:chatting_app/widgets/web_chat_appbar.dart';

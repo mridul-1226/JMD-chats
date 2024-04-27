@@ -27,8 +27,8 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'JMD Chats',
       home: ref.watch(userDataAuthProvider).when(
-            data: (data) {
-              if (data == null) {
+            data: (user) {
+              if (user == null) {
                 return const LandingScreen();
               }
               return const MobileScreenLayout();
