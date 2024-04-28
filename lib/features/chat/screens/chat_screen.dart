@@ -58,7 +58,7 @@ class ChatScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          const Expanded(child: ChatList()),
+          Expanded(child: ChatList(uid)),
           const SizedBox(height: 5,),
           BottomChatField(receiverUserId: uid,),
           const SizedBox(height: 5,)

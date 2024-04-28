@@ -1,7 +1,6 @@
 import 'package:chatting_app/data/colors.dart';
 import 'package:chatting_app/features/chat/controller/chat_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {

@@ -4,7 +4,7 @@ import 'package:chatting_app/common/repository/common_firebase_storage_repositor
 import 'package:chatting_app/common/utils/utils.dart';
 import 'package:chatting_app/features/auth/screens/otp_screen.dart';
 import 'package:chatting_app/models/user_model.dart';
-import 'package:chatting_app/screens/mobile_screen_layout.dart';
+import 'package:chatting_app/screens/mobile_screen.dart';
 import 'package:chatting_app/screens/user_information_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

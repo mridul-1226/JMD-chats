@@ -35,7 +35,7 @@ class SelectContactsScreen extends ConsumerWidget {
                     context,
                     ChatScreen.routeName,
                     arguments: {
-                      'name': contact.displayName,
+                      'name': data[1][index].name,
                       'uid': data[1][index].uid,
                     },
                   ),

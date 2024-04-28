@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:chatting_app/common/enums/message_enum.dart';
 import 'package:chatting_app/common/utils/utils.dart';
 import 'package:chatting_app/models/chat_contact_model.dart';
@@ -19,6 +17,54 @@ class ChatRepository {
   final FirebaseAuth auth;
 
   ChatRepository({required this.firestore, required this.auth});
+
+  Stream<List<MessageModel>> getMessages(String receiverId) {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('timeSent')
+        .snapshots()
+        .map((event) {
+      List<MessageModel> messages = [];
+      for (var doc in event.docs) {
+        var message = MessageModel.fromMap(doc.data());
+        messages.add(message);
+      }
+      return messages;
+    });
+  }
+
+  Stream<List<ChatContactModel>> getChatList() {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .snapshots()
+        .asyncMap((event) async {
+      List<ChatContactModel> chatList = [];
+
+      for (var document in event.docs) {
+        var chatContact = ChatContactModel.fromMap(document.data());
+        var userData = await firestore
+            .collection('users')
+            .doc(chatContact.contactId)
+            .get();
+        var user = UserModel.fromMap(userData.data()!);
+
+        chatList.add(ChatContactModel(
+            name: user.name,
+            profilePic: user.profilePic,
+            lastMessage: chatContact.lastMessage,
+            timeSent: chatContact.timeSent,
+            contactId: user.uid));
+      }
+
+      return chatList;
+    });
+  }
 
   void _saveDataToContactsSubcollection(
     UserModel senderUserData,
