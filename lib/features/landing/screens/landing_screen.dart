@@ -35,10 +35,12 @@ class LandingScreen extends StatelessWidget {
               Image.asset(
                 'assets/landing.png',
                 color: tabColor,
-                width: size.width * 0.78,
+                width: size.width * 0.7,
               ),
-              SizedBox(
-                height: size.height / 7,
+              Expanded(
+                child: SizedBox(
+                  height: size.height / 7,
+                ),
               ),
               SizedBox(
                 width: size.width * 0.9,
@@ -49,12 +51,15 @@ class LandingScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: size.height * 0.05,
+                height: size.height * 0.04,
               ),
               SizedBox(
                 width: size.width * 0.8,
                 child:
                     CustomButton(text: 'AGREE AND CONTINUE', onPressed: () => navigateToLoginScreen(context)),
+              ),
+              const SizedBox(
+                height: 25,
               )
             ],
           ),

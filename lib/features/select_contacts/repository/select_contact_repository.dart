@@ -50,7 +50,7 @@ class SelectContactRepository {
                 .replaceAll(' ', '')
                 .replaceAll('-', '');
             return selectedPhone.contains(userData!.phoneNumber) ||
-                userData!.phoneNumber.contains(selectedPhone);
+                userData!.phoneNumber.contains(selectedPhone) || selectedPhone == userData!.phoneNumber;
           })) {
             availableContacts.add(contact);
             users.add(userData!);

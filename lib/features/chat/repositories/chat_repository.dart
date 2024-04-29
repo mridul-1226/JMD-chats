@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:chatting_app/common/enums/message_enum.dart';
+import 'package:chatting_app/common/repository/common_firebase_storage_repository.dart';
 import 'package:chatting_app/common/utils/utils.dart';
 import 'package:chatting_app/models/chat_contact_model.dart';
 import 'package:chatting_app/models/message_model.dart';
@@ -171,6 +174,64 @@ class ChatRepository {
           username: senderUserData.name,
           receiverUsername: receiverUserData.name,
           messageType: MessageEnum.text);
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void sendFileMessage(
+      {required BuildContext context,
+      required File file,
+      required UserModel senderUserData,
+      required String receiverUserId,
+      required ProviderRef ref,
+      required MessageEnum messageEnum}) async {
+    try {
+      var timeSent = DateTime.now();
+      UserModel receiverUserData;
+      var userDataMap =
+          await firestore.collection('users').doc(receiverUserId).get();
+
+      receiverUserData = UserModel.fromMap(userDataMap.data()!);
+
+      var messageId = const Uuid().v1();
+
+      var fileUrl = await ref
+          .read(commonFirebaseStorageProvider)
+          .storeFileToFirebase(
+              'chat/${senderUserData.uid}/$receiverUserId/${messageEnum.type}/$messageId',
+              file);
+
+      String fileContactMsg;
+
+      switch (messageEnum) {
+        case MessageEnum.image:
+          fileContactMsg = '📷 Image';
+          break;
+        case MessageEnum.video:
+          fileContactMsg = '🎥 Video';
+          break;
+        case MessageEnum.audio:
+          fileContactMsg = '🎵 Audio';
+          break;
+        case MessageEnum.gif:
+          fileContactMsg = 'GIF';
+          break;
+        default:
+          fileContactMsg = '';
+      }
+
+      _saveDataToContactsSubcollection(
+          senderUserData, receiverUserData, fileContactMsg, timeSent);
+
+      _saveMessageToMessageSubcollection(
+          receiverUserId: receiverUserId,
+          text: fileUrl,
+          timeSent: timeSent,
+          messageId: messageId,
+          username: senderUserData.name,
+          receiverUsername: receiverUserData.name,
+          messageType: messageEnum);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

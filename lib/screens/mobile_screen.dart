@@ -1,10 +1,44 @@
 import 'package:chatting_app/data/colors.dart';
+import 'package:chatting_app/features/auth/controller/auth_controller.dart';
 import 'package:chatting_app/features/chat/widgets/contact_list.dart';
 import 'package:chatting_app/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MobileScreenLayout extends StatelessWidget {
+class MobileScreenLayout extends ConsumerStatefulWidget {
   const MobileScreenLayout({super.key});
+
+  @override
+  ConsumerState<MobileScreenLayout> createState() => _MobileScreenLayoutState();
+}
+
+class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
+    with WidgetsBindingObserver {
+
+      @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+      @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        ref.read(authControllerProvider).updateUserState(true);        
+        break;
+      default:
+        ref.read(authControllerProvider).updateUserState(false);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +50,10 @@ class MobileScreenLayout extends StatelessWidget {
             Navigator.pushNamed(context, SelectContactsScreen.routeName);
           },
           backgroundColor: tabColor,
-          child: const Icon(Icons.add_comment, color: Colors.white,),
+          child: const Icon(
+            Icons.add_comment,
+            color: Colors.white,
+          ),
         ),
         appBar: AppBar(
           title: const Text(
