@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chatting_app/common/enums/message_enum.dart';
+import 'package:chatting_app/common/providers/message_reply_provider.dart';
 import 'package:chatting_app/common/repository/common_firebase_storage_repository.dart';
 import 'package:chatting_app/common/utils/utils.dart';
 import 'package:chatting_app/models/chat_contact_model.dart';
@@ -117,7 +118,9 @@ class ChatRepository {
       required String messageId,
       required String username,
       required String receiverUsername,
-      required MessageEnum messageType}) async {
+      required MessageEnum messageType,
+      required MessageReply? messageReply,
+      required MessageEnum repliedMessageType}) async {
     final message = MessageModel(
         senderId: auth.currentUser!.uid,
         receiverId: receiverUserId,
@@ -125,7 +128,14 @@ class ChatRepository {
         type: messageType,
         timeSent: timeSent,
         messageId: messageId,
-        isSeen: false);
+        isSeen: false,
+        repliedMessage: messageReply == null ? '' : messageReply.message,
+        repliedTo: messageReply == null
+            ? ''
+            : messageReply.isMe
+                ? username
+                : receiverUsername,
+        repliedMessageType: repliedMessageType);
 
     //Messages at sender
     await firestore
@@ -152,7 +162,8 @@ class ChatRepository {
       {required BuildContext context,
       required String text,
       required UserModel senderUserData,
-      required String receiverUserId}) async {
+      required String receiverUserId,
+      required MessageReply? messageReply}) async {
     try {
       var timeSent = DateTime.now();
       UserModel receiverUserData;
@@ -173,7 +184,11 @@ class ChatRepository {
           messageId: messageId,
           username: senderUserData.name,
           receiverUsername: receiverUserData.name,
-          messageType: MessageEnum.text);
+          messageType: MessageEnum.text,
+          messageReply: messageReply,
+          repliedMessageType: messageReply == null
+              ? MessageEnum.text
+              : messageReply.messageEnum);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -185,7 +200,8 @@ class ChatRepository {
       required UserModel senderUserData,
       required String receiverUserId,
       required ProviderRef ref,
-      required MessageEnum messageEnum}) async {
+      required MessageEnum messageEnum,
+      required MessageReply? messageReply}) async {
     try {
       var timeSent = DateTime.now();
       UserModel receiverUserData;
@@ -231,7 +247,73 @@ class ChatRepository {
           messageId: messageId,
           username: senderUserData.name,
           receiverUsername: receiverUserData.name,
-          messageType: messageEnum);
+          messageType: messageEnum,
+          messageReply: messageReply,
+          repliedMessageType: messageReply == null
+              ? MessageEnum.image
+              : messageReply.messageEnum);
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void sendGIFMessage(
+      {required BuildContext context,
+      required String gifUrl,
+      required UserModel senderUserData,
+      required String receiverUserId,
+      required MessageReply? messageReply}) async {
+    try {
+      var timeSent = DateTime.now();
+      UserModel receiverUserData;
+      var userDataMap =
+          await firestore.collection('users').doc(receiverUserId).get();
+
+      receiverUserData = UserModel.fromMap(userDataMap.data()!);
+
+      var messageId = const Uuid().v1();
+
+      _saveDataToContactsSubcollection(
+          senderUserData, receiverUserData, gifUrl, timeSent);
+
+      _saveMessageToMessageSubcollection(
+          receiverUserId: receiverUserId,
+          text: gifUrl,
+          timeSent: timeSent,
+          messageId: messageId,
+          username: senderUserData.name,
+          receiverUsername: receiverUserData.name,
+          messageType: MessageEnum.gif,
+          messageReply: messageReply,
+          repliedMessageType: messageReply == null
+              ? MessageEnum.gif
+              : messageReply.messageEnum);
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void setMessageSeen(BuildContext context, String receiverUserId, String messageId) async {
+    try {
+      //Messages at sender
+    await firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .doc(receiverUserId)
+        .collection('messages')
+        .doc(messageId)
+        .update({'isSeen' : true});
+
+    //Messages at receiver
+    await firestore
+        .collection('users')
+        .doc(receiverUserId)
+        .collection('chats')
+        .doc(auth.currentUser!.uid)
+        .collection('messages')
+        .doc(messageId)
+        .update({'isSeen' : true});
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

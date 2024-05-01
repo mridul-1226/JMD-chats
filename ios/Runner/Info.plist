@@ -53,5 +53,7 @@
 	<string>Mic Library Use</string>
 	<key>NSContactsUsageDescription</key>
     <string>Contact list to chat</string>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>Needs to record audio</string>
 </dict>
 </plist>

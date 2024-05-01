@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:chatting_app/gif_key.dart';
 import 'package:enough_giphy_flutter/enough_giphy_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,8 +16,9 @@ void showSnackBar({required BuildContext context, required String content}) {
 Future<File?> pickImageFromGallery(BuildContext context) async {
   File? image;
   try {
-    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if(pickedImage != null){
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
       image = File(pickedImage.path);
     }
   } catch (e) {
@@ -29,8 +30,9 @@ Future<File?> pickImageFromGallery(BuildContext context) async {
 Future<File?> pickVideoFromGallery(BuildContext context) async {
   File? video;
   try {
-    final pickedVideo = await ImagePicker().pickVideo(source: ImageSource.gallery);
-    if(pickedVideo != null){
+    final pickedVideo =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedVideo != null) {
       video = File(pickedVideo.path);
     }
   } catch (e) {
@@ -39,9 +41,20 @@ Future<File?> pickVideoFromGallery(BuildContext context) async {
   return video;
 }
 
-void pickGif(BuildContext context) {
-  try{
-  } catch(e) {
+Future<GiphyGif?> pickGif(BuildContext context) async {
+  GiphyGif? gif;
+  try {
+    if (Platform.isAndroid) {
+      gif = await Giphy.getGif(context: context, apiKey: androidKey,);
+    }
+    else if(Platform.isIOS){
+      gif = await Giphy.getGif(context: context, apiKey: iosKey,);
+    }
+    else{
+      gif = await Giphy.getGif(context: context, apiKey: windowsKey,);
+    }
+  } catch (e) {
     showSnackBar(context: context, content: e.toString());
   }
+  return gif;
 }
