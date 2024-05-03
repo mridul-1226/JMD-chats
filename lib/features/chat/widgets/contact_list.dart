@@ -5,13 +5,26 @@ import 'package:chatting_app/features/chat/screens/chat_screen.dart';
 import 'package:chatting_app/models/chat_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
-class ContactList extends ConsumerWidget {
+class ContactList extends ConsumerStatefulWidget {
   const ContactList({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ContactList> createState() => _ContactListState();
+}
+
+class _ContactListState extends ConsumerState<ContactList> {
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      ref.read(chatControllerProvider).getChatList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: StreamBuilder<List<ChatContactModel>>(
@@ -24,7 +37,6 @@ class ContactList extends ConsumerWidget {
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
-            String message = snapshot.data![index].lastMessage;
                 return Column(
                   children: [
                     Padding(
@@ -47,16 +59,11 @@ class ContactList extends ConsumerWidget {
                             snapshot.data![index].name,
                             style: const TextStyle(fontSize: 18),
                           ),
-                          subtitle: Text(
-                            message.length > 20 ? "${message.substring(0,20)} ..." : message,
-                            style: const TextStyle(fontSize: 16, letterSpacing: 1),
-                            maxLines: 1,
-                          ),
-                          trailing: Text(
-                            DateFormat.Hm()
-                                .format(snapshot.data![index].timeSent),
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 14),
+                          trailing: Icon(
+                            Icons.circle,
+                            color: snapshot.data![index].isOnline
+                                ? Colors.green
+                                : Colors.red,
                           ),
                         ),
                       ),

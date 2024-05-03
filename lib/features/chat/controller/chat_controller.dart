@@ -85,4 +85,16 @@ class ChatController {
       messageId,
     );
   }
+
+  void deleteMessages(BuildContext context, String receiverId, String messageIds) {
+    chatRepository.deleteMessages(context, receiverId, messageIds);
+  }
+
+  void editMessages(BuildContext context, String receiverId, String messageId, String text) {
+    chatRepository.editMessage(context, receiverId, messageId, text);
+  }
+
+   void unsendMessages(BuildContext context, String receiverId, String messageIds) {
+    chatRepository.unsendMessage(context, receiverId, messageIds);
+  }
 }

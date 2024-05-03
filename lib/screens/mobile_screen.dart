@@ -56,10 +56,15 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
           ),
         ),
         appBar: AppBar(
-          title: const Text(
-            'JMD',
-            style: TextStyle(
-                color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),
+          title: const Column(
+            children: [
+              SizedBox(height: 5,),
+              Text(
+                'JMD',
+                style: TextStyle(
+                    color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
           centerTitle: false,
           toolbarHeight: 38,

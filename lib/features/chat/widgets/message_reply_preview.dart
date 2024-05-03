@@ -1,6 +1,5 @@
 import 'package:chatting_app/common/providers/message_reply_provider.dart';
 import 'package:chatting_app/features/chat/widgets/display_file.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

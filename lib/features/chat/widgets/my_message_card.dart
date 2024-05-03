@@ -8,10 +8,12 @@ class MyMessageCard extends StatelessWidget {
   final String message, time;
   final MessageEnum type;
   final VoidCallback onLeftSwipe;
+  final VoidCallback onRightSwipe;
   final String repliedText;
   final String username;
   final MessageEnum repliedMessageType;
   final bool isSeen;
+  final String messageId;
 
   const MyMessageCard(
       {super.key,
@@ -21,13 +23,17 @@ class MyMessageCard extends StatelessWidget {
       required this.onLeftSwipe,
       required this.repliedText,
       required this.username,
-      required this.repliedMessageType, required this.isSeen});
+      required this.repliedMessageType,
+      required this.isSeen,
+      required this.messageId,
+      required this.onRightSwipe});
 
   @override
   Widget build(BuildContext context) {
     final isReplying = repliedText.isNotEmpty;
     return SwipeTo(
       onLeftSwipe: (details) => onLeftSwipe(),
+      onRightSwipe: (details) => onRightSwipe(),
       child: Align(
         alignment: Alignment.centerRight,
         child: ConstrainedBox(
@@ -39,9 +45,9 @@ class MyMessageCard extends StatelessWidget {
             elevation: 1,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-                bottomRight: Radius.circular(8),
+                topLeft: Radius.circular(15),
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
               ),
             ),
             color: messageColor,
@@ -62,30 +68,36 @@ class MyMessageCard extends StatelessWidget {
                           right: 5,
                           left: 5,
                         ),
-                  child: Column(children: [
-                    if (isReplying) ...[
-                      Text(
-                        username,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        constraints: const BoxConstraints(minWidth: 50),
-                        decoration: BoxDecoration(
-                          color: backgroundColor.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(5),
+                  child: Column(
+                    children: [
+                      if (isReplying) ...[
+                        Container(
+                          constraints: const BoxConstraints(minWidth: 100),
+                          decoration: BoxDecoration(
+                            color: backgroundColor.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                username,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600, color: Color.fromARGB(255, 222, 147, 236), letterSpacing: 1.2),
+                              ),
+                              SizedBox(height: repliedMessageType == MessageEnum.text ? 0 : 4),
+                              DisplayFile(
+                                message: repliedText,
+                                type: repliedMessageType,
+                              ),
+                            ],
+                          ),
                         ),
-                        child: DisplayFile(
-                          message: repliedText,
-                          type: repliedMessageType,
-                        ),
-                      ),
+                      ],
+                      DisplayFile(message: message, type: type),
                     ],
-                    DisplayFile(message: message, type: type),
-                  ],),
+                  ),
                 ),
                 Positioned(
                   bottom: 3,

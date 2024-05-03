@@ -1,18 +1,23 @@
 class ChatContactModel {
   final String name;
   final String profilePic;
-  final String lastMessage;
-  final DateTime timeSent;
+  // final String lastMessage;
+  // final DateTime timeSent;
+  final bool isOnline;
   final String contactId;
+  ChatContactModel({
+    required this.name,
+    required this.profilePic,
+    required this.isOnline,
+    required this.contactId,
+  });
 
-  ChatContactModel({required this.name, required this.profilePic, required this.lastMessage, required this.timeSent, required this.contactId});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': name,
       'profilePic': profilePic,
-      'lastMessage': lastMessage,
-      'timeSent': timeSent.millisecondsSinceEpoch,
+      'isOnline': isOnline,
       'contactId': contactId,
     };
   }
@@ -21,8 +26,7 @@ class ChatContactModel {
     return ChatContactModel(
       name: map['name'] ?? '',
       profilePic: map['profilePic'] ?? '',
-      lastMessage: map['lastMessage'] ?? '',
-      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
+      isOnline: map['isOnline'] ?? false,
       contactId: map['contactId'] ?? '',
     );
   }

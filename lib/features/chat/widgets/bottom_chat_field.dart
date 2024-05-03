@@ -189,7 +189,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                         ),
                         IconButton(
                           onPressed: selectGif,
-                          icon: Icon(Icons.gif_box_outlined),
+                          icon: const Icon(Icons.gif_box_outlined),
                         ),
                       ],
                     ),

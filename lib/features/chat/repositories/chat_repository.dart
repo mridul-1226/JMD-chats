@@ -61,8 +61,9 @@ class ChatRepository {
         chatList.add(ChatContactModel(
             name: user.name,
             profilePic: user.profilePic,
-            lastMessage: chatContact.lastMessage,
-            timeSent: chatContact.timeSent,
+            // lastMessage: chatContact.lastMessage,
+            // timeSent: chatContact.timeSent,
+            isOnline: user.isOnline,
             contactId: user.uid));
       }
 
@@ -80,8 +81,9 @@ class ChatRepository {
     var receiverChatContact = ChatContactModel(
         name: senderUserData.name,
         profilePic: senderUserData.profilePic,
-        lastMessage: text,
-        timeSent: timeSent,
+        // lastMessage: text,
+        // timeSent: timeSent,
+        isOnline: receiverUserData.isOnline,
         contactId: senderUserData.uid);
 
     await firestore
@@ -97,8 +99,9 @@ class ChatRepository {
     var senderChatContact = ChatContactModel(
         name: receiverUserData.name,
         profilePic: receiverUserData.profilePic,
-        lastMessage: text,
-        timeSent: timeSent,
+        // lastMessage: text,
+        // timeSent: timeSent,
+        isOnline: senderUserData.isOnline,
         contactId: receiverUserData.uid);
 
     await firestore
@@ -293,27 +296,87 @@ class ChatRepository {
     }
   }
 
-  void setMessageSeen(BuildContext context, String receiverUserId, String messageId) async {
+  void setMessageSeen(
+      BuildContext context, String receiverUserId, String messageId) async {
     try {
       //Messages at sender
-    await firestore
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .collection('chats')
-        .doc(receiverUserId)
-        .collection('messages')
-        .doc(messageId)
-        .update({'isSeen' : true});
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(receiverUserId)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
 
-    //Messages at receiver
-    await firestore
-        .collection('users')
-        .doc(receiverUserId)
-        .collection('chats')
-        .doc(auth.currentUser!.uid)
-        .collection('messages')
-        .doc(messageId)
-        .update({'isSeen' : true});
+      //Messages at receiver
+      await firestore
+          .collection('users')
+          .doc(receiverUserId)
+          .collection('chats')
+          .doc(auth.currentUser!.uid)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void deleteMessages(
+      BuildContext context, String receiverUserId, String messageIds) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(receiverUserId)
+          .collection('messages')
+          .doc(messageIds)
+          .delete();
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void editMessage(BuildContext context, String receiverUserId,
+      String messageIds, String updatedMessage) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(receiverUserId)
+          .collection('messages')
+          .doc(messageIds)
+          .update({'text': updatedMessage});
+
+          await firestore
+          .collection('users')
+          .doc(receiverUserId)
+          .collection('chats')
+          .doc(auth.currentUser!.uid)
+          .collection('messages')
+          .doc(messageIds)
+          .update({'text': updatedMessage});
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void unsendMessage(BuildContext context, String receiverUserId, String messageId) async {
+    try {
+      deleteMessages(context, receiverUserId, messageId);
+
+      await firestore
+          .collection('users')
+          .doc(receiverUserId)
+          .collection('chats')
+          .doc(auth.currentUser!.uid)
+          .collection('messages')
+          .doc(messageId)
+          .delete();
+
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
