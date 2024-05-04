@@ -16,7 +16,7 @@ class DisplayFile extends StatelessWidget {
     return type == MessageEnum.text
         ? Text(
             message,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 18),
           )
         : type == MessageEnum.video
             ? VideoPlayerItem(videoUrl: message)
@@ -41,7 +41,7 @@ class DisplayFile extends StatelessWidget {
                       },
                       icon: Icon(
                         isPlaying ? Icons.pause_circle : Icons.play_circle,
-                        size: 50,
+                        size: 30,
                       ),
                     ),
                   )

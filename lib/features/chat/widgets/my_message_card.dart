@@ -1,7 +1,9 @@
 import 'package:chatting_app/common/enums/message_enum.dart';
 import 'package:chatting_app/data/colors.dart';
 import 'package:chatting_app/features/chat/widgets/display_file.dart';
+import 'package:chatting_app/features/chat/widgets/replied_display_file.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 class MyMessageCard extends StatelessWidget {
@@ -72,7 +74,6 @@ class MyMessageCard extends StatelessWidget {
                     children: [
                       if (isReplying) ...[
                         Container(
-                          constraints: const BoxConstraints(minWidth: 100),
                           decoration: BoxDecoration(
                             color: backgroundColor.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(5),
@@ -82,12 +83,17 @@ class MyMessageCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                username,
+                                '$username  ',
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w600, color: Color.fromARGB(255, 222, 147, 236), letterSpacing: 1.2),
+                                    fontWeight: FontWeight.w600,
+                                    color: Color.fromARGB(255, 222, 147, 236),
+                                    letterSpacing: 1.2),
                               ),
-                              SizedBox(height: repliedMessageType == MessageEnum.text ? 0 : 4),
-                              DisplayFile(
+                              SizedBox(
+                                  height: repliedMessageType == MessageEnum.text
+                                      ? 0
+                                      : 4),
+                              RepliedDisplayFile(
                                 message: repliedText,
                                 type: repliedMessageType,
                               ),

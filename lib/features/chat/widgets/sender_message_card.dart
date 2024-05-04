@@ -1,7 +1,9 @@
 import 'package:chatting_app/common/enums/message_enum.dart';
 import 'package:chatting_app/data/colors.dart';
 import 'package:chatting_app/features/chat/widgets/display_file.dart';
+import 'package:chatting_app/features/chat/widgets/replied_display_file.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 class SenderMessageCard extends StatelessWidget {
@@ -31,7 +33,7 @@ class SenderMessageCard extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: ConstrainedBox(
           constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 45),
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 45, minWidth: 120,),
           child: Card(
             elevation: 1,
             shape: const RoundedRectangleBorder(
@@ -62,23 +64,25 @@ class SenderMessageCard extends StatelessWidget {
                   child: Column(
                     children: [
                       if (isReplying) ...[
-                        Text(
-                          username,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
                         Container(
-                          padding: const EdgeInsets.all(8),
-                          constraints: const BoxConstraints(minWidth: 50),
                           decoration: BoxDecoration(
                             color: backgroundColor.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: DisplayFile(
-                            message: repliedText,
-                            type: repliedMessageType,
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Column(
+                            children: [
+                              Text(
+                                '$username  ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600, color: Color.fromARGB(255, 222, 147, 236), letterSpacing: 1.2),
+                              ),
+                              SizedBox(height: repliedMessageType == MessageEnum.text ? 0 : 4),
+                              RepliedDisplayFile(
+                                message: repliedText,
+                                type: repliedMessageType,
+                              ),
+                            ],
                           ),
                         ),
                       ],

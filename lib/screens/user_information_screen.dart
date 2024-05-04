@@ -17,6 +17,24 @@ class UserInformationScreen extends ConsumerStatefulWidget {
 class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
   final TextEditingController nameController = TextEditingController();
   File? image;
+  String? url;
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  void getUserData() async {
+    await ref.read(authControllerProvider).getCurrentUserData().then((value) {
+      url = value!.profilePic;
+      name = value.name;
+    });
+    setState(() {
+      nameController.text = name == null ? '' : name!;
+    });
+  }
 
   @override
   void dispose() {
@@ -51,9 +69,9 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
             Stack(
               children: [
                 image == null
-                    ? const CircleAvatar(
+                    ? CircleAvatar(
                         backgroundImage: NetworkImage(
-                            'https://cdn-icons-png.flaticon.com/512/1077/1077114.png'),
+                            url == null ?'https://cdn-icons-png.flaticon.com/512/1077/1077114.png' : url!),
                         radius: 64,
                       )
                     : CircleAvatar(
